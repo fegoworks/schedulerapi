@@ -1,23 +1,30 @@
 'use strict'
-const User = use('App/Models/User')
 const Hash = use('Hash')
 
 class UpdateProfileController {
   async update({
     request,
     response,
+    auth,
     params
   }) {
     const {
       id
-    } = params;
+    } = params
     const {
       username,
       password,
       newPassword
     } = request.only(['username', 'password', 'newPassword'])
 
-    const user = await User.findByOrFail('id', id)
+    const user = auth.current.user
+    if (id !== user.id) {
+      return response.status(401).json({
+        message: {
+          error: "Cannot update this account"
+        }
+      })
+    }
     const isPassword = await Hash.verify(password, user.password)
 
     if (!isPassword) {
@@ -31,11 +38,11 @@ class UpdateProfileController {
     user.username = username
     user.password = newPassword
 
-    const update = await user.save()
+    const updatedDetails = await user.save()
 
     return response.status(200).json({
       status: "Success",
-      data: update
+      data: updatedDetails
     })
   }
 }

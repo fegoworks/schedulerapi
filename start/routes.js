@@ -3,8 +3,9 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
 
-Route.post('users', 'UserController.store')
+Route.post('users', 'UserController.signup')
+Route.post('auth/signin', 'UserController.signin')
 Route.group(() => {
   // update username and password
   Route.put('users/:id', 'UpdateProfileController.update')
-})
+}).middleware('auth')
