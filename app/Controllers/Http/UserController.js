@@ -2,7 +2,7 @@
 const User = use('App/Models/User')
 
 class UserController {
-  async store({
+  async signup({
     request,
     response
   }) {
@@ -31,6 +31,30 @@ class UserController {
     } catch (error) {
       return response.status(error.status).json({
         error
+      })
+    }
+  }
+
+  async signin({
+    request,
+    auth,
+    response
+  }) {
+    try {
+
+      const token = await auth.attempt(
+        request.input('email'),
+        request.input('password')
+      )
+
+      return response.status(200).json({
+        status: "Success",
+        data: token
+      })
+    } catch (error) {
+      return response.status(400).json({
+        status: "error",
+        message: "Invalid email/password"
       })
     }
   }
