@@ -9,3 +9,5 @@ Route.group(() => {
   // update username and password
   Route.put('users/:id', 'UpdateProfileController.update')
 }).middleware('auth')
+Route.post('users/forgotPassword', 'ForgotPasswordController.recoverPassword')
+Route.put('users/forgotPassword/:token/:email', 'ForgotPasswordController.updatePassword')
