@@ -1,8 +1,8 @@
 {
   "name": "schedulerAPI",
-  "version": "0.1",
+  "version": "1.0.0",
   "adonis-version": "4.1.0",
-  "description": "Adonisjs boilerplate for API server with pre-configured JWT",
+  "description": "A Scheduler REST API built with AdonisJS",
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
@@ -10,10 +10,12 @@
   },
   "keywords": [
     "adonisjs",
-    "adonis-app"
+    "adonis-app",
+    "scheduler",
+    "event-manager"
   ],
-  "author": "",
-  "license": "UNLICENSED",
+  "author": "Edafe Oghenefego",
+  "license": "MIT",
   "private": true,
   "dependencies": {
     "@adonisjs/ace": "^5.0.8",
@@ -34,5 +36,8 @@
   "devDependencies": {},
   "autoload": {
     "App": "./app"
+  },
+  "engines": {
+    "node": "10.x"
   }
 }
