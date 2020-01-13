@@ -13,10 +13,8 @@ class EventController {
    * Show a list of all events.
    * GET events
    *
-   * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
   async index({
     response,
@@ -44,25 +42,9 @@ class EventController {
   }
 
   /**
-   * Render a form to be used for creating a new event.
-   * GET events/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create({
-    request,
-    response,
-    view
-  }) {}
-
-  /**
    * Create/save a new event.
    * POST events
    *
-   * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
@@ -107,10 +89,8 @@ class EventController {
    * Display a single event.
    * GET events/:id
    *
-   * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
   async show({
     request,
@@ -144,30 +124,71 @@ class EventController {
         data: event
       })
     } catch (error) {
-      if (err.name === 'ModelNotFoundException') {
-        return response.status(err.status).json({
+      if (error.name === 'ModelNotFoundException') {
+        return response.status(error.status).json({
           message: {
             error: 'No event found'
           }
         })
       }
-      return response.status(err.status)
+      return response.status(error.status)
     }
   }
 
   /**
-   * Delete a event with id.
+   * Delete an event with id.
    * DELETE events/:id
    *
-   * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
   async destroy({
     params,
-    request,
-    response
-  }) {}
+    response,
+    auth
+  }) {
+
+    try {
+      const eventId = params.id
+      const user = auth.current.user
+
+      // look for the event
+      const event = await Event.query().where({
+        id: eventId,
+        user_id: user.id
+      }).fetch()
+
+      if (event.rows.length == 0) {
+        return response.status(404).json({
+          message: {
+            error: 'No event found'
+          }
+        })
+      }
+
+      const jsonEvent = event.toJSON()[0]
+
+      // confirm event owner
+      if (jsonEvent['user_id'] !== user.id) {
+        return response.status(401).json({
+          message: {
+            error: 'You are not allowed to delete this event'
+          }
+        })
+      }
+      // delete
+      await Event.query().where({
+        id: eventId,
+        user_id: user.id
+      }).delete()
+
+      return response.status(200).json({
+        status: "success",
+      })
+    } catch (error) {
+      return response.status(error.status)
+    }
+  }
 }
 
 module.exports = EventController
