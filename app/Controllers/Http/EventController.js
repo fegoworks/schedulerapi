@@ -113,41 +113,47 @@ class EventController {
    * @param {View} ctx.view
    */
   async show({
-    params,
     request,
     response,
-    view
-  }) {}
+    auth
+  }) {
+    try {
+      const {
+        date
+      } = request.only(['date'])
+      const user = auth.current.user
 
-  /**
-   * Render a form to update an existing event.
-   * GET events/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit({
-    params,
-    request,
-    response,
-    view
-  }) {}
+      const event = await Event.query().where({
+        user_id: user.id,
+        date
+      }).fetch()
 
-  /**
-   * Update event details.
-   * PUT or PATCH events/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async update({
-    params,
-    request,
-    response
-  }) {}
+      console.log(event);
+
+
+      if (event.rows.length === 0) {
+        return response.status(404).json({
+          message: {
+            error: "Event not found"
+          }
+        })
+      }
+
+      return response.status(200).json({
+        status: "Success",
+        data: event
+      })
+    } catch (error) {
+      if (err.name === 'ModelNotFoundException') {
+        return response.status(err.status).json({
+          message: {
+            error: 'No event found'
+          }
+        })
+      }
+      return response.status(err.status)
+    }
+  }
 
   /**
    * Delete a event with id.
