@@ -12,5 +12,6 @@ Route.group(() => {
 Route.post('users/forgotPassword', 'ForgotPasswordController.recoverPassword')
 Route.put('users/forgotPassword/:token/:email', 'ForgotPasswordController.updatePassword')
 Route.group(() => {
-  Route.post('events/new', 'EventController.store')
+  Route.post('events/', 'EventController.store')
+  Route.get('events/', 'EventController.index')
 }).middleware('auth')

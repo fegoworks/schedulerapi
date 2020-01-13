@@ -19,10 +19,29 @@ class EventController {
    * @param {View} ctx.view
    */
   async index({
-    request,
     response,
-    view
-  }) {}
+    auth
+  }) {
+    try {
+      const user = auth.current.user
+
+      const events = await Event.query().where({
+        user_id: user.id
+      }).fetch()
+
+      return response.status(200).json({
+        status: "Success",
+        data: events
+      })
+
+    } catch (error) {
+      return response.status(error.status).json({
+        message: {
+          error: "User is unauthorized"
+        }
+      })
+    }
+  }
 
   /**
    * Render a form to be used for creating a new event.
@@ -71,7 +90,10 @@ class EventController {
         time
       })
 
-      return newEvent
+      return response.status(200).json({
+        status: "Success",
+        data: newEvent
+      })
     } catch (error) {
       return response.status(error.status).json({
         message: {
