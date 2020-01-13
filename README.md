@@ -76,7 +76,7 @@ Send a `POST` request to `/users` with the following JSON structure:
 }
 ```
 
-### Updating a user rofilr
+### Updating a user profile
 
 Send a `PUT` request `users/:id` with the body:
 
