@@ -1,0 +1,70 @@
+<body>
+<h1 id="welcome-to-the-scheduler-api">Welcome to the scheduler API</h1>
+<h2 id="project-description">project description</h2>
+<p>This an API that enables you to create a user. After creating this user, you&rsquo;are able to create events, create tasks for events with dates.</p>
+<h2 id="api-endpoints">API endpoints</h2>
+<p>Here are all endpoints for this API:</p>
+<h3 id="creating-a-new-user">Creating a new user</h3>
+<p>Send a <code>POST</code> request to <code>/users</code> with the following JSON structure:</p>
+<pre><code class="language-json">{
+	username: fego,
+	email: oghenefego@mail.com,
+	password: difficultpass ,
+}
+</code></pre>
+<h3 id="updating-a-user-profile">Updating a user profile</h3>
+<p>Send a <code>PUT</code> request <code>users/:id</code> with the body:</p>
+<pre><code class="language-json">{
+  password: 123456,
+  newPassword: 1234,
+  username: theirDaddytyyy
+}
+</code></pre>
+<h3 id="signing-in-with-the-user">Signing in with the user</h3>
+<p>Send a <code>POST</code> request to <code>/auth/signin</code>, with the following:</p>
+<pre><code class="language-json">{
+	email: ,
+	password:
+}
+</code></pre>
+<p>When you signin you&rsquo;ll receive a <code>Bearer token</code>. You&rsquo;ll need this token to send any request related to event and Task creation.</p>
+<h3 id="recovering-the-password">Recovering the password</h3>
+<p>If, by any reason, you forgot the password, you won&rsquo;t be able to directly access the database and look for the password because it&rsquo;s encrypted.<br>
+So you&rsquo;ll need to go through the normal process of a mere mortal using your system.</p>
+<p>First, request a password recovery by sending a <code>POST</code> request to <code>/passwords</code> with:</p>
+<pre><code class="language-json">{
+  email: email@here.com
+}
+</code></pre>
+<p>After that, you&rsquo;ll receive an email with a link. Grab the <code>token</code> that is after <code>paswords/</code>.</p>
+<p>Having that token, to finally update the password, send a <code>PUT</code> request to <code>passwords/TOKEN_HERE</code> with the following JSON body:</p>
+<pre><code class="language-json">{
+  password: 123,
+  password_confirmation: 123
+}
+</code></pre>
+<blockquote>
+<p>Frow now on, every request described here will require you send
+the Bearer token</p>
+</blockquote>
+<h3 id="creating-a-new-event">Creating a new event</h3>
+<p>Send a <code>POST</code> request to <code>/events</code>, with the following:</p>
+<pre><code class="language-json">{
+  title: Second eventt,
+  location: Lagos, Badagry,
+  date: 2020-01-12,
+  time: 14:39:00
+}
+</code></pre>
+<h3 id="listing-all-events">Listing all events</h3>
+<p>If you want to see the list of all events, send a <code>GET</code> request to
+<code>/events</code>.</p>
+<p>There&rsquo;s no need for a JSON body in this request.</p>
+<h3 id="showing-only-a-specific-event">Showing only a specific event</h3>
+<p>You can list only one event by sending a <code>GET</code> request to <code>events/event_ID_HERE</code>.</p>
+<p>No need for a body as well.</p>
+<h3 id="deleting-a-event">Deleting a event</h3>
+<p>Delete an event by placing its ID in the <code>DELETE</code> request URL
+<code>events/event_ID</code>.</p>
+
+</body>
