@@ -17,3 +17,17 @@ Route.group(() => {
   Route.get('events/date/', 'EventController.show')
   Route.delete('events/:id/', 'EventController.destroy')
 }).middleware('auth')
+Route.get('/', ({
+  view
+}) => {
+  return view.render('documentation')
+});
+Route.any('*', ({
+  request,
+  response
+}) => {
+  response.status(404).json({
+    status: 404,
+    error: 'that route does not exist',
+  });
+});
